@@ -1,0 +1,13 @@
+name: dev_workflow
+
+on:
+    push:
+        branches:
+            -main
+
+jobs:
+    job_1:
+        runs-on: ubuntu-latest
+        steps:
+            - name: afficher Hello World
+              run: echo "Hello, World!"
