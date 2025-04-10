@@ -1,13 +1,38 @@
-name: dev_workflow
-
+name: Front pipeline
 on:
-    push:
-        branches:
-            -main
+  push:
+    branches: [main]
 
 jobs:
-    job_1:
-        runs-on: ubuntu-latest
-        steps:
-            - name: afficher Hello World
-              run: echo "Hello, World!"
+  unit-test-job:
+     runs-on: ubuntu-latest
+     steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: install dependencies
+        run: npm i
+
+      # npm run test
+      - name: run unit tests
+        run: npm run test
+  
+  code-quality-test:
+      runs-on: ubuntu-latest
+      steps:
+        - name: checkout
+          uses: actions/checkout@v4
+
+        - name: install dependencies
+          run: npm i
+
+      # npm run lint
+        - name: run unit tests
+          run: npm run lint
+          
+
+
+
+# 1: Test job
+# 2: Build and push job
+# 3: Deploy job
