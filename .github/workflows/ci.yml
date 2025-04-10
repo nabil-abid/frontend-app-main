@@ -3,6 +3,10 @@ on:
   push:
     branches: [main]
 
+env:
+    IMAGE_NAME: abid127/back-session7
+    BUILD_NUMBER: ${{ github.run_number }}
+
 jobs:
   unit-test-job:
      runs-on: ubuntu-latest
@@ -17,7 +21,7 @@ jobs:
       - name: run unit tests
         run: npm run test
   
-  code-quality-test:
+  code-quality-test-job:
       runs-on: ubuntu-latest
       steps:
         - name: checkout
@@ -30,8 +34,30 @@ jobs:
         - name: run unit tests
           run: npm run lint
           
+  build-and-push:
+        runs-on: ubuntu-latest
+        needs: [unit-test-job, code-quality-test-job]
+        steps:
+          - name: checkout
+            uses: actions/checkout@v4
 
+          - name: build docker image
+            run: docker build -t abid127/frontend-api .
 
+          - name: login to dockerhub
+            uses: docker/login-action@v3
+            with:
+                  username: ${{ vars.DOCKERHUB_USERNAME }}
+                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
+          - name: tag image With version number
+            run: docker tag ${{env.IMAGE_NAME}} ${{env.IMAGE_NAME}}:${{ env.BUILD_NUMBER }}
+    
+          - name: push image with version number
+            run: docker push ${{env.IMAGE_NAME}}:${{ env.BUILD_NUMBER }}
+    
+          - name: push image docker 
+            run: docker push ${{env.IMAGE_NAME}}:latest
 
 # 1: Test job
 # 2: Build and push job
