@@ -4,7 +4,7 @@ on:
     branches: [main]
 
 env:
-    IMAGE_NAME: abid127/back-session7
+    IMAGE_NAME: abid127/frontend-api
     BUILD_NUMBER: ${{ github.run_number }}
 
 jobs:
